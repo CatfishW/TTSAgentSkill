@@ -1,5 +1,5 @@
 {
-  "name": "@catfishw/text2speech-skill",
+  "name": "text2speech-skill",
   "version": "1.0.0",
   "description": "Agent skill for Qwen3-TTS text-to-speech operations - generate speech, clone voices, encode/decode audio",
   "main": "index.js",

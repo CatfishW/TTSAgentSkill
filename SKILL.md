@@ -13,7 +13,7 @@ metadata:
             {
               "id": "npm",
               "kind": "npm",
-              "package": "@catfishw/text2speech-skill",
+              "package": "text2speech-skill",
               "bins": ["text2speech", "t2s"],
               "label": "Install via npm",
             },
