@@ -8,16 +8,80 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
+const isWin = process.platform === 'win32';
+const pythonCmd = isWin ? 'python' : 'python3';
+const cliPath = path.join(__dirname, 'text2speech_skill', 'cli.py');
+
+/**
+ * Check if Python skill is installed
+ * @returns {Promise<boolean>}
+ */
+async function isInstalled() {
+  return new Promise((resolve) => {
+    const child = spawn(pythonCmd, ['-c', 'import text2speech_skill'], {
+      stdio: 'ignore'
+    });
+
+    child.on('close', (code) => {
+      resolve(code === 0);
+    });
+
+    child.on('error', () => {
+      resolve(false);
+    });
+
+    setTimeout(() => {
+      child.kill();
+      resolve(false);
+    }, 3000);
+  });
+}
+
+/**
+ * Install Python package
+ * @returns {Promise<void>}
+ */
+async function installPythonPackage() {
+  return new Promise((resolve, reject) => {
+    console.log('Setting up Python dependencies...');
+
+    const installCmd = spawn(pythonCmd, ['-m', 'pip', 'install', '-e', __dirname], {
+      stdio: 'inherit'
+    });
+
+    installCmd.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`pip install failed with code ${code}`));
+      }
+    });
+
+    installCmd.on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
 /**
  * Execute text2speech command
  * @param {string[]} args - Command line arguments
  * @returns {Promise<{stdout: string, stderr: string, exitCode: number}>}
  */
-function text2speech(args = []) {
-  return new Promise((resolve, reject) => {
-    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-    const cliPath = path.join(__dirname, 'text2speech_skill', 'cli.py');
+async function text2speech(args = []) {
+  // Check if installed, if not try to install
+  const installed = await isInstalled();
+  if (!installed) {
+    try {
+      await installPythonPackage();
+    } catch (err) {
+      console.error('Failed to auto-install Python package.');
+      console.error('Please run: pip install -e ' + __dirname);
+      throw err;
+    }
+  }
 
+  return new Promise((resolve, reject) => {
     const child = spawn(pythonCmd, [cliPath, ...args], {
       stdio: ['inherit', 'pipe', 'pipe']
     });
@@ -45,37 +109,12 @@ function text2speech(args = []) {
   });
 }
 
-/**
- * Check if Python skill is installed
- * @returns {Promise<boolean>}
- */
-async function isInstalled() {
-  try {
-    const { spawn } = require('child_process');
-    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-
-    return new Promise((resolve) => {
-      const child = spawn(pythonCmd, ['-m', 'text2speech_skill.cli', '--help'], {
-        stdio: 'ignore'
-      });
-
-      child.on('close', (code) => {
-        resolve(code === 0);
-      });
-
-      child.on('error', () => {
-        resolve(false);
-      });
-
-      // Timeout after 5 seconds
-      setTimeout(() => {
-        child.kill();
-        resolve(false);
-      }, 5000);
-    });
-  } catch {
-    return false;
-  }
+// If run directly as CLI
+if (require.main === module) {
+  text2speech(process.argv.slice(2)).catch((err) => {
+    console.error('Error:', err.message);
+    process.exit(1);
+  });
 }
 
 module.exports = {
