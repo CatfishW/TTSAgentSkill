@@ -3,6 +3,4 @@
  * Text2Speech CLI wrapper
  */
 
-console.error('DEBUG: Starting text2speech CLI');
 require('../index.js');
-console.error('DEBUG: Finished loading index.js');
