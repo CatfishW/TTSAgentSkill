@@ -128,7 +128,11 @@ class Text2SpeechClient:
     def download_audio(self, audio_url: str, output_path: str):
         """Download audio file"""
         if audio_url.startswith('/'):
-            audio_url = f"{self.base_url}{audio_url}"
+            # Remove /api/v1 prefix if base_url already has it
+            base = self.base_url
+            if audio_url.startswith('/api/v1') and base.endswith('/api/v1'):
+                audio_url = audio_url[7:]  # Remove /api/v1 prefix
+            audio_url = f"{base}{audio_url}"
         elif not audio_url.startswith('http'):
             audio_url = f"{self.base_url}/{audio_url}"
         resp = self.session.get(audio_url)
