@@ -109,9 +109,13 @@ async function text2speech(args = []) {
   });
 }
 
-// If run directly as CLI
-if (require.main === module) {
-  text2speech(process.argv.slice(2)).catch((err) => {
+// If run directly as CLI (check if called with arguments or as main module)
+const isCli = require.main === module || !module.parent;
+if (isCli) {
+  const args = process.argv.slice(2);
+  text2speech(args).then((result) => {
+    process.exit(result.exitCode);
+  }).catch((err) => {
     console.error('Error:', err.message);
     process.exit(1);
   });
