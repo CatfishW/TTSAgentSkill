@@ -111,6 +111,7 @@ async function text2speech(args = []) {
 
 // If run directly as CLI (check if called with arguments or as main module)
 const isCli = require.main === module || !module.parent;
+console.error('DEBUG: isCli=' + isCli + ', require.main=' + (require.main ? require.main.filename : 'null') + ', module.parent=' + module.parent);
 if (isCli) {
   const args = process.argv.slice(2);
   text2speech(args).then((result) => {
