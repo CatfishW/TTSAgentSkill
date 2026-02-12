@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+/**
+ * Text2Speech CLI wrapper
+ */
+
+const { spawn } = require('child_process');
+const path = require('path');
+
+const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+const cliPath = path.join(__dirname, '..', 'text2speech_skill', 'cli.py');
+
+const child = spawn(pythonCmd, [cliPath, ...process.argv.slice(2)], {
+  stdio: 'inherit'
+});
+
+child.on('close', (code) => {
+  process.exit(code);
+});

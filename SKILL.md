@@ -11,11 +11,18 @@ metadata:
         "install":
           [
             {
+              "id": "npm",
+              "kind": "npm",
+              "package": "@catfishw/text2speech-skill",
+              "bins": ["text2speech", "t2s"],
+              "label": "Install via npm",
+            },
+            {
               "id": "pip",
               "kind": "pip",
               "package": "text2speech-skill",
               "bins": ["text2speech", "t2s"],
-              "label": "Install Text2Speech Skill",
+              "label": "Install via pip",
             },
           ],
       },
@@ -34,11 +41,20 @@ Generate high-quality text-to-speech audio using Qwen3-TTS models.
 
 ## Installation
 
+### Via npm (Node.js)
+
+```bash
+npm install -g @catfishw/text2speech-skill
+```
+
+### Via pip (Python)
+
 ```bash
 pip install git+https://github.com/CatfishW/TTSAgentSkill.git
 ```
 
-Or use the CLI directly:
+### Direct Usage
+
 ```bash
 python3 -m text2speech_skill.cli --help
 ```

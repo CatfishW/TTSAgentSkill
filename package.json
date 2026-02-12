@@ -1,0 +1,39 @@
+{
+  "name": "@catfishw/text2speech-skill",
+  "version": "1.0.0",
+  "description": "Agent skill for Qwen3-TTS text-to-speech operations - generate speech, clone voices, encode/decode audio",
+  "main": "index.js",
+  "bin": {
+    "text2speech": "./bin/text2speech",
+    "t2s": "./bin/t2s"
+  },
+  "scripts": {
+    "postinstall": "python3 -m pip install -e . --user || pip install -e .",
+    "test": "python3 -m text2speech_skill.cli status"
+  },
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "qwen3-tts",
+    "voice-clone",
+    "agent-skill",
+    "claude-code"
+  ],
+  "author": "CatfishW",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CatfishW/TTSAgentSkill.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "SKILL.md",
+    "setup.py",
+    "requirements.txt",
+    "text2speech_skill/",
+    "bin/",
+    "index.js"
+  ]
+}
