@@ -8,8 +8,8 @@
     "t2s": "./bin/t2s"
   },
   "scripts": {
-    "postinstall": "python3 -m pip install -e . --user || pip install -e .",
-    "test": "python3 -m text2speech_skill.cli status"
+    "postinstall": "node scripts/postinstall.js",
+    "test": "node -e \"require('./index.js').text2speech(['status'])\""
   },
   "keywords": [
     "tts",
@@ -34,6 +34,7 @@
     "requirements.txt",
     "text2speech_skill/",
     "bin/",
+    "scripts/",
     "index.js"
   ]
 }
